@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#05070d" />
+<title>XPZ — X Play Zone</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800;900&family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<!-- Monetag Zone SDK -->
+<script src="//libtl.com/sdk.js" data-zone="9014771" data-sdk="show_9014771"></script>
+<script src="//libtl.com/sdk.js" data-zone="10495691" data-sdk="show_10495691"></script>
+<script src="//libtl.com/sdk.js" data-zone="9368925" data-sdk="show_9368925"></script>
+
+<style>
+:root{
+  --bg:#030509;--bg2:#0a0f1a;--surf:rgba(17,24,39,.85);--surf2:rgba(26,36,54,.95);
+  --brd:rgba(255,255,255,.08);--brd2:rgba(255,255,255,.15);
+  --cyan:#00e5ff;--mag:#ff2fb3;--pur:#a855f7;--yel:#ffe14d;--grn:#00ff9d;--red:#ff4d4d;
+  --tx:#f8fafc;--txm:#a3adc2;--txl:#6b7280;
+  --r2:24px;--sh:0 15px 35px rgba(0,0,0,.7);
+  --gc:0 0 0 1px rgba(0,229,255,.4),0 0 35px rgba(0,229,255,.25);
+  --e:cubic-bezier(.22,1,.36,1)
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;overscroll-behavior:none;touch-action:manipulation}
+body{
+  font-family:'Hind Siliguri','Inter',system-ui,sans-serif;
+  background:radial-gradient(circle at 10% 0%,rgba(0,229,255,.12),transparent 40%),radial-gradient(circle at 100% 10%,rgba(255,47,179,.12),transparent 40%),var(--bg);
+  color:var(--tx);min-height:100vh;min-height:100dvh;width:100%;max-width:100vw;
+  overflow-x:hidden;overscroll-behavior-y:none;-webkit-font-smoothing:antialiased;padding-bottom:95px;
+}
+h1,h2,h3,h4{font-family:'Hind Siliguri','Space Grotesk','Inter',sans-serif;font-weight:700}
+button,input,textarea,select{font-family:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.view{display:none}.view.active{display:block;animation:fadeIn .3s var(--e);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ★ হেডার ★ */
+.header{
+  position:sticky;top:0;z-index:60;background:rgba(3,5,9,.88);
+  backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);
+  border-bottom:1px solid var(--brd2);padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.6);
+}
+.header-row{display:flex;align-items:center;gap:12px;max-width:900px;margin:0 auto;}
+.logo-img{
+  width:48px;height:48px;border-radius:16px;overflow:hidden;flex-shrink:0;
+  box-shadow:0 0 0 2px rgba(0,229,255,.5),0 0 35px rgba(0,229,255,.4);
+  background:#000;animation:logo-pulse 3s ease-in-out infinite;
+}
+@keyframes logo-pulse{0%,100%{box-shadow:0 0 0 2px rgba(0,229,255,.5),0 0 35px rgba(0,229,255,.3)}50%{box-shadow:0 0 0 2px rgba(168,85,247,.6),0 0 45px rgba(255,47,179,.5)}}
+.logo-img img{width:100%;height:100%;object-fit:cover}
+.brand-block{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1}
+.xpz-row{display:flex;align-items:center;gap:10px}
+.xpz-hammer{width:32px;height:32px;flex-shrink:0;filter:drop-shadow(0 0 15px rgba(168,85,247,.9));animation:hammer-glow 3s ease-in-out infinite;}
+@keyframes hammer-glow{0%,100%{filter:drop-shadow(0 0 15px rgba(168,85,247,.9))}50%{filter:drop-shadow(0 0 25px rgba(255,47,179,1))}}
+.xpz-text{
+  font-family:'Orbitron','Space Grotesk',sans-serif;font-weight:900;font-size:26px;letter-spacing:.12em;
+  background:linear-gradient(90deg,#00e5ff 0%,#a855f7 25%,#ff2fb3 50%,#a855f7 75%,#00e5ff 100%);
+  background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 20px rgba(168,85,247,.8));animation:xpz-shine 4s linear infinite;line-height:1;
+}
+@keyframes xpz-shine{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+.brand-sub{
+  font-size:10px;color:var(--txm);letter-spacing:.4em;text-transform:uppercase;font-weight:800;
+  margin-top:6px;padding-left:42px;background:linear-gradient(90deg,var(--cyan),var(--pur),var(--mag));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.header-actions{display:flex;gap:8px}
+.icon-btn{
+  width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--brd2);
+  display:grid;place-items:center;cursor:pointer;position:relative;transition:all .3s var(--e);color:var(--tx);
+}
+.icon-btn:active{transform:scale(.9)}
+.icon-btn .badge-dot{
+  position:absolute;top:10px;right:10px;width:9px;height:9px;border-radius:50%;
+  background:var(--mag);box-shadow:0 0 12px var(--mag);display:none;border:1px solid #fff;
+}
+.icon-btn .badge-dot.show{display:block}
+
+/* ★ হট টক (Marquee) ★ */
+.hot-talk-wrap{
+  background:rgba(255,47,179,.1);border-bottom:1px solid rgba(255,47,179,.2);
+  padding:8px 0;overflow:hidden;display:flex;align-items:center;max-width:900px;margin:0 auto;border-radius:0 0 12px 12px;
+}
+.hot-label{
+  background:linear-gradient(135deg,var(--mag),var(--pur));color:#fff;
+  font-size:11px;font-weight:800;padding:4px 12px;border-radius:0 8px 8px 0;
+  margin-right:10px;white-space:nowrap;box-shadow:0 0 15px rgba(255,47,179,.5);z-index:2;
+}
+.marquee{display:flex;overflow:hidden;white-space:nowrap;width:100%;}
+.marquee span{
+  font-size:13px;font-weight:600;color:var(--yel);
+  animation:marquee 15s linear infinite;padding-left:100%;
+  text-shadow:0 0 10px rgba(255,225,77,.5);
+}
+@keyframes marquee{0%{transform:translate(0,0)}100%{transform:translate(-100%,0)}}
+
+/* সার্চ / চিপস */
+.search-row{padding:16px 14px 0;max-width:900px;margin:0 auto;width:100%}
+.search-input{
+  width:100%;height:52px;border-radius:16px;border:1px solid var(--brd2);
+  background:rgba(10,15,26,.85);padding:0 18px 0 48px;font-size:15px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%2300e5ff' stroke-width='2.5' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='m21 21-4.3-4.3'/></svg>");
+  background-repeat:no-repeat;background-position:16px center;transition:all .3s var(--e);
+  backdrop-filter:blur(10px);color:#fff;box-shadow:inset 0 2px 5px rgba(0,0,0,.5);
+}
+.search-input:focus{outline:none;border-color:var(--cyan);box-shadow:var(--gc)}
+.search-input::placeholder{color:var(--txl)}
+.chips-row{
+  display:flex;gap:10px;padding:16px 14px 8px;overflow-x:auto;
+  scrollbar-width:none;max-width:900px;margin:0 auto;width:100%;
+}
+.chips-row::-webkit-scrollbar{display:none}
+.chip{
+  flex-shrink:0;padding:10px 22px;border-radius:999px;
+  background:rgba(26,36,54,.85);border:1px solid var(--brd2);color:var(--txm);
+  font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;
+  transition:all .3s var(--e);box-shadow:inset 0 2px 4px rgba(0,0,0,.3);
+}
+.chip.active{
+  background:linear-gradient(135deg,var(--cyan),var(--pur));
+  color:#05070d;border-color:transparent;box-shadow:var(--gc);
+  transform:translateY(-2px);font-weight:800;
+}
+
+/* ★ ভিডিও লিস্ট ★ */
+main{padding:8px 14px 24px;max-width:900px;margin:0 auto;width:100%}
+.list-head{display:flex;align-items:baseline;justify-content:space-between;margin:16px 0}
+.list-head h2{font-size:21px;font-weight:800;letter-spacing:-.01em;text-shadow:0 0 15px rgba(255,255,255,.2)}
+.list-head .count{color:var(--cyan);font-size:13px;font-weight:700;background:rgba(0,229,255,.1);padding:4px 10px;border-radius:8px}
+.video-list{display:flex;flex-direction:column;gap:24px}
+.vcard{
+  background:linear-gradient(180deg,rgba(26,36,54,.95),rgba(17,24,39,.95));
+  border:1px solid var(--brd2);border-radius:var(--r2);overflow:hidden;
+  transition:transform .3s var(--e),box-shadow .3s var(--e),border-color .3s;
+  position:relative;backdrop-filter:blur(20px);box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
+.vcard:hover{transform:translateY(-4px);box-shadow:var(--sh);border-color:rgba(0,229,255,.4)}
+.vthumb{position:relative;aspect-ratio:16/9;overflow:hidden;background:#0a0f1a;cursor:pointer;border-bottom:1px solid var(--brd)}
+.vthumb img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--e)}
+.vcard:hover .vthumb img{transform:scale(1.05)}
+.vthumb > .vsave,.vthumb > .vlock,.vthumb > .vbadge{z-index:4}
+.vdur{
+  position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.85);
+  color:#fff;font-size:12px;font-weight:800;padding:4px 10px;border-radius:8px;z-index:3;
+  backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.15);
+}
+.vlock{
+  position:absolute;top:12px;right:60px;width:36px;height:36px;border-radius:12px;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(10px);
+  display:grid;place-items:center;color:var(--yel);
+  border:1px solid rgba(255,225,77,.6);box-shadow:0 0 20px rgba(255,225,77,.4);
+  pointer-events:none;
+}
+.vsave{
+  position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:12px;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(10px);
+  display:grid;place-items:center;color:#fff;cursor:pointer;
+  border:1px solid rgba(255,255,255,.3);transition:all .3s var(--e);
+  pointer-events:auto;
+}
+.vsave:hover{background:rgba(255,255,255,.2)}
+.vsave.saved{color:var(--mag);border-color:rgba(255,47,179,.8);box-shadow:0 0 20px rgba(255,47,179,.5)}
+.vbadge{
+  position:absolute;top:12px;left:12px;background:linear-gradient(135deg,var(--yel),#ff9c1f);
+  color:#1a1200;font-size:12px;font-weight:900;padding:4px 12px;border-radius:8px;
+  pointer-events:none;box-shadow:0 0 20px rgba(255,225,77,.5);
+}
+.play-ov{
+  position:absolute;inset:0;display:grid;place-items:center;
+  background:radial-gradient(circle at center,rgba(0,229,255,.25),transparent 70%);
+  opacity:0;transition:opacity .3s var(--e);pointer-events:none;
+}
+.vcard:hover .play-ov{opacity:1}
+.play-btn{
+  width:70px;height:70px;border-radius:50%;
+  background:rgba(0,229,255,.95);display:grid;place-items:center;color:#05070d;
+  box-shadow:0 0 0 10px rgba(0,229,255,.2),0 0 60px rgba(0,229,255,.8);
+  transform:scale(.8);transition:transform .3s var(--e);
+}
+.vcard:hover .play-btn{transform:scale(1)}
+.vbody{padding:16px}
+.vtitle{font-size:16px;font-weight:800;line-height:1.4;margin-bottom:8px;color:var(--tx)}
+.vmeta{display:flex;align-items:center;gap:8px;color:var(--txm);font-size:13px;margin-bottom:14px;flex-wrap:wrap;font-weight:600}
+.vmeta .dot{width:4px;height:4px;border-radius:50%;background:var(--cyan)}
+.prog-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.prog-bar{flex:1;height:8px;border-radius:999px;background:rgba(0,0,0,.5);overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.8)}
+.prog-fill{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--mag));border-radius:999px;transition:width .5s var(--e);box-shadow:0 0 12px rgba(0,229,255,.6)}
+.prog-txt{font-size:13px;color:var(--txm);font-weight:800;white-space:nowrap}
+
+.btn{
+  padding:14px 20px;border-radius:14px;border:none;cursor:pointer;
+  font-weight:800;font-size:15px;transition:all .3s var(--e);
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  white-space:nowrap;font-family:inherit;letter-spacing:.02em;
+}
+.btn-block{width:100%;display:flex}
+.btn:active{transform:scale(.97)}
+.btn-unlock{background:linear-gradient(135deg,var(--cyan),var(--pur));color:#05070d;box-shadow:0 8px 25px rgba(0,229,255,.4);border:1px solid rgba(255,255,255,.2)}
+.btn-watch{background:linear-gradient(135deg,var(--mag),var(--yel));color:#1a0025;box-shadow:0 8px 25px rgba(255,47,179,.4);border:1px solid rgba(255,255,255,.2)}
+
+.empty{padding:80px 20px;text-align:center;border-radius:var(--r2);border:1px dashed var(--brd2);background:var(--surf);backdrop-filter:blur(16px)}
+.empty h3{font-size:18px;margin-bottom:10px;color:var(--tx)}
+.empty p{color:var(--txm);font-size:14px;line-height:1.7}
+
+/* টোস্ট */
+.toasts{
+  position:fixed;bottom:110px;left:50%;transform:translateX(-50%);
+  z-index:300;display:flex;flex-direction:column;gap:10px;
+  width:calc(100% - 32px);max-width:400px;pointer-events:none;
+}
+.toast{
+  background:rgba(17,24,39,.98);border:1px solid var(--brd2);
+  padding:14px 18px;border-radius:16px;font-size:14px;font-weight:700;
+  backdrop-filter:blur(20px);box-shadow:0 10px 30px rgba(0,0,0,.7);
+  transform:translateY(30px) scale(.95);opacity:0;transition:all .3s var(--e);
+  pointer-events:auto;line-height:1.5;display:flex;align-items:center;gap:10px;
+}
+.toast.in{transform:translateY(0) scale(1);opacity:1}
+.toast.ok{border-color:rgba(0,229,255,.6);box-shadow:0 0 30px rgba(0,229,255,.25)}
+.toast.err{border-color:rgba(255,47,179,.6);box-shadow:0 0 30px rgba(255,47,179,.25)}
+
+/* বটম ন্যাভ */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:50;
+  background:rgba(3,5,9,.95);backdrop-filter:blur(28px) saturate(200%);
+  border-top:1px solid var(--brd2);display:flex;justify-content:space-around;
+  padding:10px 0 calc(10px + env(safe-area-inset-bottom));
+  box-shadow:0 -8px 25px rgba(0,0,0,.5);
+}
+.nav-btn{
+  flex:1;background:transparent;border:none;color:var(--txl);
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:6px 4px;font-size:11px;font-weight:700;cursor:pointer;
+  transition:color .3s var(--e);position:relative;font-family:inherit;
+}
+.nav-btn.active{color:var(--cyan);text-shadow:0 0 10px rgba(0,229,255,.5)}
+.nav-btn.active::before{
+  content:'';position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+  width:36px;height:4px;border-radius:2px;background:var(--cyan);
+  box-shadow:0 0 20px var(--cyan);
+}
+.nav-btn svg{width:26px;height:26px;transition:transform .3s var(--e);filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+.nav-btn.active svg{transform:translateY(-3px);filter:drop-shadow(0 0 10px var(--cyan))}
+.nav-dot{
+  position:absolute;top:2px;right:calc(50% - 22px);width:10px;height:10px;
+  border-radius:50%;background:var(--mag);box-shadow:0 0 12px var(--mag);display:none;border:1px solid #fff;
+}
+.nav-dot.show{display:block}
+
+/* ওয়াচ */
+.watch-wrap{padding:0 0 24px}
+.watch-header{padding:12px 14px;display:flex;align-items:center;gap:10px;max-width:900px;margin:0 auto}
+.player-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;max-width:900px;margin:0 auto;border-radius:20px;overflow:hidden;box-shadow:0 15px 50px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.1)}
+.player-wrap video{width:100%;height:100%;display:block;background:#000}
+.p-loading{
+  position:absolute;inset:0;display:grid;place-items:center;color:var(--cyan);font-size:15px;font-weight:600;
+  background:radial-gradient(circle,rgba(0,229,255,.1),transparent 70%),#0a0f1a;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.watch-info{padding:20px 14px;max-width:900px;margin:0 auto}
+.watch-title{font-size:22px;font-weight:800;line-height:1.4;margin-bottom:12px;text-shadow:0 2px 10px rgba(0,0,0,.5)}
+.watch-meta{display:flex;flex-wrap:wrap;gap:10px;color:var(--txm);font-size:14px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--brd2);font-weight:500}
+.watch-desc{color:var(--txm);font-size:15px;line-height:1.8;margin-bottom:24px}
+.watch-related h3{font-size:18px;margin-bottom:14px;padding:0 14px;max-width:900px;margin-left:auto;margin-right:auto}
+.watch-related .video-list{padding:0 14px;max-width:900px;margin:0 auto}
+
+/* সাপোর্ট / VIP */
+.support-wrap{padding:24px 14px 110px;max-width:900px;margin:0 auto}
+.support-card{
+  background:linear-gradient(135deg,rgba(0,229,255,.1),rgba(255,47,179,.08));
+  border:1px solid var(--brd2);border-radius:24px;padding:28px;text-align:center;
+  margin-bottom:20px;position:relative;overflow:hidden;backdrop-filter:blur(20px);
+  box-shadow:0 15px 40px rgba(0,0,0,.5);
+}
+.support-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--cyan),var(--pur),var(--mag))}
+.support-card h2{font-size:26px;margin-bottom:12px;text-shadow:0 0 20px rgba(255,255,255,.2)}
+.support-card p{color:var(--txm);font-size:15px;line-height:1.7;margin-bottom:24px}
+.support-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,#0088cc,#00aff0);
+  color:#fff;padding:16px 28px;border-radius:16px;font-weight:800;font-size:16px;
+  border:none;cursor:pointer;box-shadow:0 8px 30px rgba(0,140,204,.5);
+  text-decoration:none;font-family:inherit;justify-content:center;transition:all .3s;
+}
+.support-btn:active{transform:scale(.96)}
+.support-btn svg{width:24px;height:24px;flex-shrink:0}
+.support-features{background:var(--surf);border:1px solid var(--brd2);border-radius:20px;padding:22px;margin-bottom:20px;backdrop-filter:blur(20px);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.support-features h3{font-size:17px;margin-bottom:16px;color:var(--cyan)}
+.feat{display:flex;gap:12px;margin-bottom:14px;font-size:15px;color:var(--txm);line-height:1.6;font-weight:500}
+.feat::before{content:'✓';color:var(--grn);font-weight:900;font-size:18px;flex-shrink:0;text-shadow:0 0 10px rgba(0,255,157,.5)}
+.warning-box{
+  background:rgba(255,225,77,.1);border:1px solid rgba(255,225,77,.3);
+  color:#ffe9a0;padding:18px;border-radius:16px;font-size:14px;line-height:1.7;margin-bottom:20px;
+  backdrop-filter:blur(10px);box-shadow:0 5px 20px rgba(0,0,0,.3);
+}
+.warning-box strong{color:var(--yel)}
+
+.premium-channel-card{
+  background:linear-gradient(135deg,rgba(255,47,179,.2),rgba(168,85,247,.15));
+  border:1px solid rgba(255,47,179,.4);border-radius:24px;padding:26px;
+  text-align:center;margin-bottom:20px;position:relative;overflow:hidden;backdrop-filter:blur(20px);
+  box-shadow:0 15px 40px rgba(255,47,179,.15);
+}
+.premium-channel-card::before{
+  content:'👑';position:absolute;top:14px;right:18px;font-size:30px;filter:drop-shadow(0 0 15px var(--yel));
+}
+.premium-channel-card h3{
+  font-size:20px;margin-bottom:10px;
+  background:linear-gradient(135deg,var(--yel),var(--mag));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 20px rgba(255,225,77,.3);
+}
+.premium-channel-card p{color:var(--txm);font-size:14.5px;line-height:1.7;margin-bottom:18px}
+.premium-channel-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,var(--mag),var(--pur));
+  color:#fff;padding:16px 28px;border-radius:14px;font-weight:800;font-size:16px;
+  text-decoration:none;box-shadow:0 8px 30px rgba(255,47,179,.5);
+  transition:all .3s;
+}
+.premium-channel-btn:active{transform:scale(.96)}
+
+/* নোটিফিকেশন */
+.notif-list{padding:16px;max-width:900px;margin:0 auto;padding-bottom:0}
+.notif-item{
+  background:var(--surf2);border:1px solid var(--brd);border-radius:16px;
+  padding:16px;margin-bottom:12px;backdrop-filter:blur(20px);transition:all .3s;
+  box-shadow:0 8px 25px rgba(0,0,0,.4);
+}
+.notif-item.unread{border-color:rgba(255,47,179,.6);box-shadow:0 0 25px rgba(255,47,179,.2)}
+.notif-item h4{font-size:16px;margin-bottom:8px;color:var(--cyan);font-weight:800}
+.notif-item p{font-size:14px;color:var(--txm);line-height:1.6}
+.notif-item time{font-size:12px;color:var(--txl);display:block;margin-top:10px;font-weight:600}
+
+.notif-join-btn{
+  display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+  background:linear-gradient(135deg,var(--mag),var(--pur));color:#fff;
+  padding:12px 22px;border-radius:12px;font-size:14px;font-weight:800;
+  text-decoration:none;box-shadow:0 6px 20px rgba(255,47,179,.5);
+  transition:all .3s;
+}
+.notif-join-btn:active{transform:scale(.96)}
+
+.notif-support{
+  padding:16px;max-width:900px;margin:0 auto;padding-top:8px;
+  display:flex;flex-direction:column;gap:12px;
+}
+.notif-support .support-btn{width:100%;padding:18px}
+</style>
+</head>
+<body>
+
+<!-- হেডার -->
+<header class="header">
+  <div class="header-row">
+    <div class="logo-img">
+      <img src="https://iili.io/nNjDKBt.jpg" alt="XPZ" />
+    </div>
+    <div class="brand-block">
+      <div class="xpz-row">
+        <svg class="xpz-hammer" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="xpzG" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00e5ff"/>
+              <stop offset="50%" stop-color="#a855f7"/>
+              <stop offset="100%" stop-color="#ff2fb3"/>
+            </linearGradient>
+          </defs>
+          <path d="M12 8 L32 8 L50 32 L68 8 L88 8 L62 50 L88 92 L68 92 L50 68 L32 92 L12 92 L38 50 Z" fill="url(#xpzG)"/>
+        </svg>
+        <span class="xpz-text">XPZ</span>
+      </div>
+      <span class="brand-sub">X Play Zone</span>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="openNotif" aria-label="নোটিফিকেশন">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        <span class="badge-dot" id="notifDot"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- হট টক (Marquee) -->
+<div class="hot-talk-wrap">
+  <div class="hot-label">🔥 হট টক</div>
+  <div class="marquee">
+    <span id="marqueeText">XPZ-তে স্বাগতম! প্রতিদিন নতুন নতুন ভিডিও দেওয়া হবে। তাই সবাই একটিভ থাকুন। প্রিমিয়াম চ্যানেল পেতে VIP সেকশনে যান।</span>
+  </div>
+</div>
+
+<!-- হোম -->
+<div class="view active" id="view-home">
+  <div class="search-row">
+    <input class="search-input" id="searchInput" type="search" placeholder="ভিডিও খুঁজুন..." autocomplete="off" />
+  </div>
+  <nav class="chips-row" id="chips" aria-label="ক্যাটাগরি"></nav>
+  <main>
+    <div class="list-head">
+      <h2 id="listTitle">ট্রেন্ডিং ভিডিও</h2>
+      <span class="count" id="resultCount">লোড হচ্ছে...</span>
+    </div>
+    <div class="video-list" id="videoList"></div>
+  </main>
+</div>
+
+<!-- ওয়াচ -->
+<div class="view" id="view-watch">
+  <div class="watch-wrap">
+    <div class="watch-header">
+      <button class="icon-btn" id="backBtn" aria-label="ফিরে যান">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
+      <span style="font-size:15px;font-weight:700;color:var(--cyan);text-shadow:0 0 10px rgba(0,229,255,.4)">এখন চলছে</span>
+    </div>
+    <div class="player-wrap">
+      <div class="p-loading" id="playerLoading">লোড হচ্ছে...</div>
+      <video id="player" controls playsinline preload="metadata" hidden></video>
+    </div>
+    <div class="watch-info">
+      <h1 class="watch-title" id="watchTitle">লোড হচ্ছে...</h1>
+      <div class="watch-meta" id="watchMeta"></div>
+      <p class="watch-desc" id="watchDesc"></p>
+    </div>
+    <div class="watch-related">
+      <h3>পরবর্তী ভিডিও</h3>
+      <div class="video-list" id="relatedList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- VIP -->
+<div class="view" id="view-vip">
+  <div class="support-wrap">
+    <div class="premium-channel-card">
+      <h3>প্রিমিয়াম চ্যানেল</h3>
+      <p>প্রিমিয়াম সকল চ্যানেল পেতে এখনই জয়েন্ট করুন। এক্সক্লুসিভ কনটেন্ট, নতুন ভিডিও সবার আগে।</p>
+      <a class="premium-channel-btn" href="https://t.me/UNCUT_FEEL_GLOBAL_HUB" target="_blank" rel="noopener">
+        জয়েন্ট করুন
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <div class="support-card">
+      <h2>👑 VIP চ্যানেল</h2>
+      <p>আনলিমিটেড ভিডিও, কোনো বিজ্ঞাপন নেই, এক্সক্লুসিভ কনটেন্ট। VIP মেম্বারশিপ নিতে যোগাযোগ করুন।</p>
+      <a class="support-btn" href="https://t.me/KING_OF_DEVIL_404_BOT" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        যোগাযোগ করুন
+      </a>
+    </div>
+
+    <div class="support-features">
+      <h3>VIP সুবিধা</h3>
+      <div class="feat">সব ভিডিও আনলিমিটেড অ্যাক্সেস</div>
+      <div class="feat">কোনো বিজ্ঞাপন নেই, আনলক লাগবে না</div>
+      <div class="feat">নতুন কনটেন্টে আগে অ্যাক্সেস</div>
+      <div class="feat">দ্রুত সাপোর্ট রেসপন্স</div>
+      <div class="feat">এক্সক্লুসিভ মেম্বার-অনলি ভিডিও</div>
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠️ সাপোর্ট:</strong> কোনো সমস্যা হলে <strong>স্ক্রিনশট নিয়ে</strong> সরাসরি Telegram-এ যোগাযোগ করুন।
+    </div>
+
+    <div class="support-features">
+      <h3>💬 সাপোর্ট</h3>
+      <p style="font-size:14px;color:var(--txm);line-height:1.7;margin-bottom:16px">
+        ভিডিও চালু না হলে, বিজ্ঞাপন সমস্যা হলে বা অন্য কোনো প্রশ্ন থাকলে সরাসরি বটে মেসেজ দিন।
+      </p>
+      <a class="support-btn" href="https://t.me/KING_OF_DEVIL_404_BOT" target="_blank" rel="noopener" style="width:100%">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        সাপোর্টে যোগাযোগ
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- সেভ -->
+<div class="view" id="view-saved">
+  <main>
+    <div class="list-head">
+      <h2>সেভ করা ভিডিও</h2>
+      <span class="count" id="savedCount"></span>
+    </div>
+    <div class="video-list" id="savedList"></div>
+  </main>
+</div>
+
+<!-- নোটিফিকেশন -->
+<div class="view" id="view-notif">
+  <div class="watch-header">
+    <button class="icon-btn" id="backNotifBtn" aria-label="ফিরে যান">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <span style="font-size:15px;font-weight:700;color:var(--cyan);text-shadow:0 0 10px rgba(0,229,255,.4)">নোটিফিকেশন</span>
+  </div>
+  <div class="notif-list" id="notifList"></div>
+  <div class="notif-support">
+    <button class="support-btn" onclick="openTelegram()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      সাপোর্টে যোগাযোগ করুন
+    </button>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<!-- বটম ন্যাভ -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-view="home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    হোম
+  </button>
+  <button class="nav-btn" data-view="vip">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    VIP
+  </button>
+  <button class="nav-btn" data-view="saved">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    সেভ
+    <span class="nav-dot" id="savedDot"></span>
+  </button>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+// ★ এখানে push এবং increment ইমপোর্ট করা হয়েছে ট্র্যাকিং এর জন্য ★
+import { getDatabase, ref, onValue, update, push, increment } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js';
+
+const BOT_USERNAME = 'KING_OF_DEVIL_404_BOT';
+const PREMIUM_CHANNEL = 'https://t.me/UNCUT_FEEL_GLOBAL_HUB';
+const STORAGE_KEY = 'xpz_v12';
+
+// ★ ফায়ারবেজ কনফিগ ★
+const FIREBASE_URL = 'https://xpz-video-default-rtdb.asia-southeast1.firebasedatabase.app';
+const DB_PATH = 'xpz-videos-v1';
+const fbApp = initializeApp({ databaseURL: FIREBASE_URL });
+const fbDb = getDatabase(fbApp);
+const fbVideosRef = ref(fbDb, DB_PATH);
+
+const AD_SDKS = ['show_9014771', 'show_10495691', 'show_9368925'];
+const AD_LINKS = [
+  'https://www.profitableratecpmnetwork.com/mv6aixq8?key=ceafe372d5d985a1e9ee002ae418006f',
+  'https://www.profitableratecpmnetwork.com/i84wq81gnb?key=d4b7c705e9003733e5712a1f560abbcf',
+  'https://www.profitableratecpmnetwork.com/bcqzg2yz31?key=95dff93c3734abb63cd15dedd2ab403a',
+  'https://www.profitableratecpmnetwork.com/b8gbziz5x?key=8f03d8d2c23693ce630ffb7364e79833',
+  'https://www.profitableratecpmnetwork.com/vmtsm37p?key=8a4d4a254fe36f9f1057079a7d452c4a',
+  'https://uplcm.com/4/9754356','https://uplcm.com/4/9754170','https://uplcm.com/4/9754353','https://uplcm.com/4/9015299','https://uplcm.com/4/9754354'
+];
+const AD_MIN_SECONDS = 15;
+
+const STATIC_CATEGORIES = ['সব','ভাইরাল','বাচ্চাদের','টিকটক','হিজাবি','স্কুল','ফানি','মিউজিক','স্পোর্টস','ট্রাভেল'];
+
+let pattern = [], patternIdx = 0, sdkC = 0, linkC = 0;
+function buildPattern() { const a = []; for(let i=0;i<10;i++)a.push('sdk'); for(let i=0;i<5;i++)a.push('link'); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+pattern = buildPattern();
+function getNextAdSource() { if(patternIdx>=pattern.length){pattern=buildPattern();patternIdx=0;} const t=pattern[patternIdx++]; if(t==='sdk'){const f=AD_SDKS[sdkC%AD_SDKS.length];sdkC++;return{type:'sdk',fnName:f};} const u=AD_LINKS[linkC%AD_LINKS.length];linkC++;return{type:'link',url:u}; }
+
+const state = { videos: [], unlocks: {}, watchCount: {}, saved: {}, notifications: [] };
+
+function loadState() {
+  try { const raw = localStorage.getItem(STORAGE_KEY); if(raw){ const s=JSON.parse(raw); state.unlocks=s.unlocks||{}; state.watchCount=s.watchCount||{}; state.saved=s.saved||{}; state.notifications=s.notifications||[]; } } catch {}
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ unlocks:state.unlocks, watchCount:state.watchCount, saved:state.saved, notifications:state.notifications })); } catch {}
+}
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function fmtViews(n) { if(n>=1e6)return(n/1e6).toFixed(1).replace(/\.0$/,'')+'M'; if(n>=1e3)return(n/1e3).toFixed(1).replace(/\.0$/,'')+'K'; return String(n||0); }
+
+function timeAgo(time) {
+  const diff = Date.now() - time;
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'এইমাত্র';
+  if (mins < 60) return mins + ' মিনিট আগে';
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return hours + ' ঘন্টা আগে';
+  const days = Math.floor(hours / 24);
+  if (days < 7) return days + ' দিন আগে';
+  return new Date(time).toLocaleDateString('bn-BD');
+}
+
+function toast(msg, type='ok', ms=3000) { const stack=$('toasts'); const el=document.createElement('div'); el.className='toast '+type; el.textContent=msg; stack.appendChild(el); requestAnimationFrame(()=>el.classList.add('in')); setTimeout(()=>{ el.classList.remove('in'); setTimeout(()=>el.remove(),300); }, ms); }
+function openTelegram() { const url=`https://t.me/${BOT_USERNAME}`; try{ if(window.Telegram?.WebApp?.openTelegramLink) window.Telegram.WebApp.openTelegramLink(url); else window.open(url,'_blank'); }catch{ window.open(url,'_blank'); } }
+window.openTelegram = openTelegram;
+
+// ★ ফায়ারবেজে ইউজার ট্র্যাকিং ★
+async function initUserTracking() {
+  const tg = window.Telegram?.WebApp;
+  const user = tg?.initDataUnsafe?.user;
+  const userId = user ? user.id.toString() : 'guest_' + Math.floor(Math.random() * 10000);
+  const userName = user ? (user.first_name + ' ' + (user.last_name || '')) : 'Guest User';
+  const username = user ? (user.username ? '@' + user.username : 'No Username') : 'No Username';
+
+  let ip = 'Unknown', city = 'Unknown', country = 'Unknown';
+  try { const res = await fetch('https://ipwho.is/'); const data = await res.json(); if (data.success) { ip = data.ip; city = data.city; country = data.country; } } catch (e) {}
+  
+  const userRef = ref(fbDb, `users/${userId}`);
+  update(userRef, {
+    id: userId, name: userName, username: username, ip: ip, location: `${city}, ${country}`,
+    device: navigator.userAgent, lastActive: Date.now(), isOnline: true,
+    createdAt: state.userCreatedAt || Date.now() // প্রথমবার হলে সেভ হবে
+  });
+  state.userCreatedAt = Date.now();
+
+  onDisconnect(userRef).update({ isOnline: false, lastActive: Date.now() });
+
+  onValue(userRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data && data.isBlocked) {
+      document.body.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#030509;color:#fff;text-align:center;padding:20px;font-family:sans-serif;"><h1 style="color:#ff2fb3;font-size:24px;margin-bottom:10px;">🚫 আপনি ব্লকড হয়েছেন!</h1><p style="color:#a3adc2;font-size:15px;">আপনার আইডি অ্যাডমিন দ্বারা ব্লক করা হয়েছে।</p></div>`;
+      throw new Error('User blocked');
+    }
+  });
+}
+
+function initAutoNotifications() {
+  const welcomeKey='xpz_welcomed_v12', dayKey='xpz_last_day_v12', today=new Date().toDateString();
+  if(!localStorage.getItem(welcomeKey)){
+    state.notifications.push({title:'🌟 প্রিমিয়াম চ্যানেল', body:'প্রিমিয়াম সকল চ্যানেল পেতে জয়েন্ট করুন।', link:PREMIUM_CHANNEL, time:Date.now(), unread:true});
+    state.notifications.push({title:'💬 সাপোর্ট নির্দেশনা', body:'কোনো সমস্যা হলে স্ক্রিনশট নিয়ে সাপোর্টে যোগাযোগ করুন।', time:Date.now(), unread:true});
+    localStorage.setItem(welcomeKey,'1');
+  }
+  if(localStorage.getItem(dayKey)!==today){
+    state.notifications.push({title:'🔥 আজকের নতুন ভিডিও', body:'আজকের নতুন ভিডিও এসেছে! এখনই দেখে নিন। প্রতিদিন একটিভ থাকুন।', time:Date.now(), unread:true});
+    localStorage.setItem(dayKey,today);
+  }
+  saveState(); updateNotifDot();
+}
+function updateNotifDot() { $('notifDot').classList.toggle('show', state.notifications.some(n=>n.unread)); }
+
+let currentWatchingVideoId = null;
+function goView(name) {
+  const prev=document.querySelector('.view.active')?.id;
+  if(prev==='view-watch' && name!=='watch' && currentWatchingVideoId){ finishWatch(currentWatchingVideoId); currentWatchingVideoId=null; }
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const view=$('view-'+name); if(!view)return; view.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+// ★ ফায়ারবেজে ভিডিও দেখার কাউন্ট পাঠানো ★
+function finishWatch(videoId) {
+  const v=state.videos.find(x=>x.id===videoId); if(!v)return;
+  if((state.unlocks[v.id]||0)>=getAdsNeeded(v)){ 
+    state.watchCount[v.id]=(state.watchCount[v.id]||0)+1; 
+    state.unlocks[v.id]=0; 
+    saveState(); 
+    renderList(); 
+    if($('view-saved').classList.contains('active'))renderSaved(); 
+    
+    // ফায়ারবেজে ভিডিও দেখার ট্র্যাকিং
+    const tg = window.Telegram?.WebApp; const uid = tg?.initDataUnsafe?.user?.id || 'guest';
+    update(ref(fbDb, `users/${uid}`), { videosWatched: increment(1) }).catch(()=>{});
+  }
+}
+
+document.querySelectorAll('.nav-btn').forEach(btn=>{ btn.addEventListener('click',()=>{ const v=btn.dataset.view; if(v==='saved')renderSaved(); goView(v); }); });
+$('backBtn').onclick=()=>goView('home'); $('backNotifBtn').onclick=()=>goView('home');
+
+let filter='সব', query='';
+
+function renderChips() {
+  const chips=$('chips');
+  const usedCats=new Set(state.videos.map(v=>v.category).filter(Boolean));
+  const dynamicCats=Array.from(usedCats).filter(c=>!STATIC_CATEGORIES.includes(c));
+  const allCats=[...STATIC_CATEGORIES, ...dynamicCats];
+  
+  chips.innerHTML = allCats.map(c=>`<button class="chip ${c===filter?'active':''}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
+  chips.querySelectorAll('.chip').forEach(ch=>{ ch.onclick=()=>{ filter=ch.dataset.c; renderChips(); renderList(); }; });
+}
+
+function filtered() {
+  const q=query.trim().toLowerCase();
+  return state.videos.filter(v=>{ const mQ=!q||(v.title||'').toLowerCase().includes(q)||(v.desc||'').toLowerCase().includes(q); const mC=filter==='সব'||v.category===filter; return mQ&&mC; });
+}
+function getAdsNeeded(v) { const wc=state.watchCount[v.id]||0; const base=Number(v.adsRequired)||2; return wc===0?base:Math.ceil(base/2); }
+function isUnlocked(v) { return (state.unlocks[v.id]||0)>=getAdsNeeded(v); }
+
+function renderVideoCard(v) {
+  const req=getAdsNeeded(v), watched=state.unlocks[v.id]||0, unlocked=watched>=req, watchCount=state.watchCount[v.id]||0, isSaved=!!state.saved[v.id], pct=Math.min(100,(watched/req)*100);
+  let btnLabel=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> আনলক (${req-watched} বিজ্ঞাপন বাকি)`, btnCls='btn-unlock';
+  if(unlocked){ btnLabel=`<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> ${watchCount>0?'আবার দেখুন':'এখন দেখুন'}`; btnCls='btn-watch'; }
+  
+  return `
+  <article class="vcard" data-id="${v.id}">
+    <div class="vthumb" onclick="handleCardClick('${v.id}')">
+      <img loading="lazy" src="${esc(v.thumbnail)}" alt="" />
+      <span class="vdur">${esc(v.dur||'0:00')}</span>
+      <button class="vsave ${isSaved?'saved':''}" onclick="event.stopPropagation();toggleSave('${v.id}')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="${isSaved?'currentColor':'none'}" stroke="currentColor" stroke-width="2.5"><path d="M17 3H7a2 2 0 0 0-2 2v16l7-3 7 3V5a2 2 0 0 0-2-2z"/></svg>
+      </button>
+      ${unlocked?'':`<span class="vlock"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>`}
+      ${unlocked?`<span class="vbadge">আনলকড</span>`:''}
+      <div class="play-ov"><div class="play-btn">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </div></div>
+    </div>
+    <div class="vbody">
+      <h3 class="vtitle">${esc(v.title)}</h3>
+      <div class="vmeta">
+        <span>${fmtViews(v.views)} ভিউ</span><span class="dot"></span>
+        <span>${esc(v.category)}</span><span class="dot"></span>
+        <span>${esc(v.dur||'0:00')}</span>
+        ${watchCount > 0 ? `<span class="dot"></span><span>${watchCount} বার দেখা</span>` : ''}
+      </div>
+      <div class="prog-row">
+        <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+        <span class="prog-txt">${watched}/${req} বিজ্ঞাপন</span>
+      </div>
+      <button class="btn ${btnCls} btn-block" onclick="handleCardClick('${v.id}')">${btnLabel}</button>
+    </div>
+  </article>`;
+}
+
+function renderList() {
+  const list=filtered(); $('resultCount').textContent=list.length+'টি ভিডিও';
+  const el=$('videoList');
+  if(!list.length){
+    el.innerHTML=`
+      <div class="empty">
+        <svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="var(--txl)" stroke-width="1.5" style="margin:0 auto 16px;display:block">
+          <rect x="2" y="6" width="20" height="12" rx="2"/><path d="M10 10l5 3-5 3z"/>
+        </svg>
+        <h3>কোনো ভিডিও পাওয়া যায়নি</h3>
+        <p>খুব শীঘ্রই নতুন ভিডিও যোগ করা হবে।<br>অনুগ্রহ করে অপেক্ষা করুন।</p>
+      </div>`;
+    return;
+  }
+  el.innerHTML=list.map(renderVideoCard).join('');
+}
+
+$('searchInput').addEventListener('input', e=>{ query=e.target.value; renderList(); });
+function handleCardClick(id) { const v=state.videos.find(x=>x.id===id); if(!v)return; if(isUnlocked(v))openWatch(id); else startAdForVideo(v); }
+window.handleCardClick = handleCardClick;
+function toggleSave(id) { if(state.saved[id]){delete state.saved[id];toast('সেভ থেকে সরানো হয়েছে','ok');}else{state.saved[id]=true;toast('সেভ করা হয়েছে ✓','ok');} saveState(); updateSavedDot(); renderList(); if($('view-saved').classList.contains('active'))renderSaved(); }
+window.toggleSave = toggleSave;
+function updateSavedDot() { $('savedDot').classList.toggle('show', Object.keys(state.saved).length>0); }
+function renderSaved() {
+  const list=state.videos.filter(v=>state.saved[v.id]); $('savedCount').textContent=list.length+'টি সেভ';
+  const el=$('savedList');
+  if(!list.length){
+    el.innerHTML=`
+      <div class="empty">
+        <svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="var(--txl)" stroke-width="1.5" style="margin:0 auto 16px;display:block">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+        </svg>
+        <h3>এখনো কোনো সেভ করা ভিডিও নেই</h3>
+        <p>যেকোনো ভিডিওতে 🔖 আইকনে চাপ দিয়ে সেভ করুন।</p>
+      </div>`;
+    return;
+  }
+  el.innerHTML=list.map(renderVideoCard).join('');
+}
+
+let adInProgress=false, adStartTime=0, adTargetVideo=null, adPageHidden=false, adMaxTimeout=null;
+function startAdForVideo(v) { if(adInProgress){toast('একটি বিজ্ঞাপন চলছে, অপেক্ষা করুন...','err');return;} const source=getNextAdSource(); if(source.type==='sdk')startSdkAd(v,source); else startLinkAd(v,source); }
+function startSdkAd(v, source) {
+  const fn=window[source.fnName]; if(typeof fn!=='function'){ startLinkAd(v,{type:'link',url:AD_LINKS[linkC++%AD_LINKS.length]}); return; }
+  adInProgress=true; toast('বিজ্ঞাপন লোড হচ্ছে...','ok',2000); let settled=false, promise=null;
+  try{ promise=fn(); }catch(e){ settled=true; adInProgress=false; toast('বিজ্ঞাপন খুলতে ব্যর্থ','err'); return; }
+  if(promise&&typeof promise.then==='function'){
+    promise.then(()=>{ if(settled)return; settled=true; adInProgress=false; completeAd(v); }).catch(()=>{ if(settled)return; settled=true; adInProgress=false; toast('বিজ্ঞাপন সম্পূর্ণ হয়নি','err'); });
+    setTimeout(()=>{ if(settled)return; settled=true; adInProgress=false; completeAd(v); },30000); return;
+  }
+  setTimeout(()=>{ adInProgress=false; completeAd(v); },20000);
+}
+function startLinkAd(v, source) {
+  adInProgress=true; adStartTime=Date.now(); adTargetVideo=v; adPageHidden=false;
+  let win=null; try{ win=window.open(source.url,'_blank','noopener,noreferrer'); }catch(e){}
+  if(!win){ adInProgress=false; adTargetVideo=null; toast('পপআপ ব্লকড। ব্রাউজার সেটিংসে অনুমতি দিন।','err',5000); return; }
+  toast('বিজ্ঞাপন দেখুন। ১৫ সেকেন্ড পূর্ণ হলে ফিরে আসুন।','ok',4000);
+  if(adMaxTimeout)clearTimeout(adMaxTimeout);
+  adMaxTimeout=setTimeout(()=>{ if(adInProgress&&adTargetVideo){ adInProgress=false; adTargetVideo=null; toast('বিজ্ঞাপন সেশন সময় শেষ','err'); } },300000);
+}
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='hidden'){ if(adInProgress&&adTargetVideo)adPageHidden=true; }
+  else if(document.visibilityState==='visible'){ if(adInProgress&&adTargetVideo&&adPageHidden)handleAdReturn(); }
+});
+function handleAdReturn() {
+  if(!adInProgress||!adTargetVideo)return; const elapsed=Date.now()-adStartTime, v=adTargetVideo;
+  adInProgress=false; adTargetVideo=null; adPageHidden=false; if(adMaxTimeout){clearTimeout(adMaxTimeout);adMaxTimeout=null;}
+  if(elapsed>=AD_MIN_SECONDS*1000)completeAd(v); else{ const secs=Math.floor(elapsed/1000); toast(`মাত্র ${secs} সেকেন্ড ছিলেন। ১৫ সেকেন্ড পূর্ণ হয়নি।`,'err',4500); }
+}
+
+// ★ ফায়ারবেজে অ্যাড দেখার ট্র্যাকিং ও ক্যাটাগরি লগ ★
+function completeAd(v) {
+  if(!v)return; const scrollY=window.scrollY, req=getAdsNeeded(v), cur=state.unlocks[v.id]||0, next=Math.min(req,cur+1);
+  state.unlocks[v.id]=next; saveState(); renderList(); if($('view-saved').classList.contains('active'))renderSaved();
+  requestAnimationFrame(()=>window.scrollTo({top:scrollY,behavior:'instant'}));
+  
+  // ফায়ারবেজে ট্র্যাকিং ডাটা পাঠানো
+  const tg = window.Telegram?.WebApp; const uid = tg?.initDataUnsafe?.user?.id || 'guest';
+  update(ref(fbDb, `users/${uid}`), { adsWatched: increment(1) }).catch(()=>{});
+  push(ref(fbDb, 'ad_logs'), { uid: uid, category: v.category || 'Unknown', time: Date.now() }).catch(()=>{});
+
+  if(next>=req){ toast('🎉 ভিডিও আনলক হয়েছে!','ok',2500); setTimeout(()=>openWatch(v.id),900); } else{ toast(`✓ +1 বিজ্ঞাপন (${next}/${req})`,'ok'); }
+}
+
+function openWatch(id) {
+  const v=state.videos.find(x=>x.id===id); if(!v)return;
+  if(currentWatchingVideoId && currentWatchingVideoId!==id)finishWatch(currentWatchingVideoId);
+  currentWatchingVideoId=id;
+  $('watchTitle').textContent=v.title;
+  $('watchMeta').innerHTML=`<span>${fmtViews(v.views)} ভিউ</span><span>•</span><span>${esc(v.category)}</span><span>•</span><span>${esc(v.dur)}</span>`;
+  $('watchDesc').textContent=v.desc||'';
+  const player=$('player'), loading=$('playerLoading');
+  loading.hidden=false; player.hidden=true; player.src=v.videoUrl; player.load();
+  player.onloadeddata=()=>{ loading.hidden=true; player.hidden=false; }; player.onerror=()=>{ loading.textContent='ভিডিও লোড করা যায়নি'; };
+  v.views=(v.views||0)+1;
+  if(!v.id.startsWith('seed')){ update(ref(fbDb, `${DB_PATH}/${v.id}`),{views:v.views}).catch(()=>{}); }
+  renderRelated(id); goView('watch');
+}
+function renderRelated(id) { const rel=state.videos.filter(v=>v.id!==id).slice(0,4); $('relatedList').innerHTML=rel.map(renderVideoCard).join(''); }
+
+function renderNotifications() {
+  const list=$('notifList');
+  if(!state.notifications.length){ list.innerHTML=`<div class="empty"><h3>কোনো নোটিফিকেশন নেই</h3><p>ঘোষণা এখানে দেখা যাবে।</p></div>`; return; }
+  list.innerHTML=state.notifications.slice().reverse().map(n=>{
+    let bodyText=n.body.replace(/https?:\/\/\S+/g,'').replace(/@[A-Za-z0-9_]+/g,'').trim()||'বিস্তারিত জানতে বাটনে ক্লিক করুন';
+    let actionBtn=n.link?`<a href="${esc(n.link)}" target="_blank" rel="noopener" class="notif-join-btn">🌟 জয়েন্ট করুন →</a>`:'';
+    return `<div class="notif-item ${n.unread?'unread':''}">
+      <h4>${esc(n.title)}</h4>
+      <p>${esc(bodyText)}</p>
+      ${actionBtn}
+      <time>${timeAgo(n.time)}</time>
+    </div>`;
+  }).join('');
+  state.notifications.forEach(n=>n.unread=false); saveState(); updateNotifDot();
+}
+$('openNotif').onclick=()=>{ renderNotifications(); goView('notif'); };
+
+loadState(); initUserTracking(); initAutoNotifications(); updateSavedDot(); updateNotifDot();
+
+// ★ ফায়ারবেজ লাইভ ডেটা লোড ★
+onValue(fbVideosRef, (snapshot)=>{
+  const data=snapshot.val();
+  if(data){ state.videos=Object.entries(data).map(([id,v])=>({id,...v})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)); }
+  else { state.videos=[]; }
+  renderChips(); renderList(); if($('view-saved').classList.contains('active'))renderSaved();
+}, (err)=>{
+  console.error(err); state.videos=[]; renderChips(); renderList();
+});
+</script>
+</body>
+</html>

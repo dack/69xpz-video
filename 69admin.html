@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#05070d" />
+<title>XPZ — Admin Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800;900&family=Inter:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+:root{
+  --bg:#030509;--bg2:#0a0f1a;--surf:rgba(17,24,39,.85);--surf2:rgba(26,36,54,.95);
+  --brd:rgba(255,255,255,.08);--brd2:rgba(255,255,255,.15);
+  --cyan:#00e5ff;--mag:#ff2fb3;--pur:#a855f7;--yel:#ffe14d;--grn:#00ff9d;--red:#ff4d4d;
+  --tx:#f8fafc;--txm:#a3adc2;--txl:#6b7280;
+  --e:cubic-bezier(.22,1,.36,1)
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:'Hind Siliguri','Inter',sans-serif;
+  background:radial-gradient(circle at 10% 0%,rgba(0,229,255,.08),transparent 40%),var(--bg);
+  color:var(--tx);min-height:100vh;padding-bottom:50px;
+}
+
+/* ★ স্টিকি হেডার ★ */
+.header{
+  background:rgba(3,5,9,.95);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--brd);padding:14px;
+  position:sticky;top:0;z-index:50;box-shadow:0 5px 20px rgba(0,0,0,.5);
+}
+.header-row{display:flex;align-items:center;gap:12px;max-width:1000px;margin:0 auto;}
+.logo{width:44px;height:44px;border-radius:12px;overflow:hidden;box-shadow:0 0 15px rgba(0,229,255,.4);background:#000;}
+.logo img{width:100%;height:100%;object-fit:cover;}
+.brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:22px;color:var(--cyan);letter-spacing:1px;text-shadow:0 0 10px rgba(0,229,255,.5);}
+.live-badge{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--grn);background:rgba(0,255,157,.1);padding:6px 12px;border-radius:20px;border:1px solid rgba(0,255,157,.3);}
+.live-dot{width:8px;height:8px;background:var(--grn);border-radius:50%;animation:blink 1s infinite;}
+@keyframes blink{50%{opacity:0.3;}}
+
+/* ★ স্টিকি ট্যাব মেনু (যাতে স্ক্রল করে উপরে আসতে না হয়) ★ */
+.tabs-container{
+  position:sticky;top:72px;z-index:40;
+  background:rgba(3,5,9,.95);backdrop-filter:blur(20px);
+  padding:12px 14px;border-bottom:1px solid var(--brd);
+  box-shadow:0 10px 20px rgba(0,0,0,.3);
+}
+.tabs{display:flex;gap:10px;overflow-x:auto;max-width:1000px;margin:0 auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{
+  flex-shrink:0;padding:10px 22px;border-radius:12px;background:var(--surf2);border:1px solid var(--brd);
+  color:var(--txm);font-weight:800;font-size:14px;cursor:pointer;transition:all .3s var(--e);
+  display:flex;align-items:center;gap:6px;
+}
+.tab-btn.active{
+  background:linear-gradient(135deg,var(--cyan),var(--pur));
+  color:#05070d;border-color:transparent;box-shadow:0 4px 15px rgba(0,229,255,.4);transform:translateY(-2px);
+}
+
+.container{max-width:1000px;margin:0 auto;padding:20px 14px;}
+.tab-content{display:none;}
+.tab-content.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ড্যাশবোর্ড স্ট্যাটস */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.stat-card{
+  background:linear-gradient(135deg, rgba(26,36,54,.9), rgba(10,15,26,.9));
+  border:1px solid var(--brd2);border-radius:16px;padding:16px 12px;
+  text-align:center;box-shadow:0 8px 25px rgba(0,0,0,.4);
+}
+.stat-val{font-size:24px;font-weight:900;color:var(--cyan);margin-bottom:4px;text-shadow:0 0 15px rgba(0,229,255,.5);}
+.stat-lbl{font-size:12px;color:var(--txm);font-weight:700;text-transform:uppercase;}
+
+/* ক্যাটাগরি স্ট্যাটস */
+.cat-stats-card{background:var(--surf);border:1px solid var(--brd2);border-radius:20px;padding:20px;margin-bottom:24px;box-shadow:0 10px 30px rgba(0,0,0,.4);}
+.cat-stats-card h3{font-size:16px;color:var(--yel);margin-bottom:16px;border-bottom:1px solid var(--brd);padding-bottom:12px;display:flex;align-items:center;gap:8px;}
+.cat-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;font-size:14px;}
+.cat-name{font-weight:700;width:30%;color:var(--tx);}
+.cat-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,.08);border-radius:10px;margin:0 12px;overflow:hidden;}
+.cat-bar{height:100%;background:linear-gradient(90deg,var(--cyan),var(--pur));border-radius:10px;transition:width 1s var(--e);box-shadow:0 0 10px rgba(0,229,255,.3);}
+.cat-count{font-weight:800;color:var(--cyan);width:20%;text-align:right;}
+
+/* ইউজার কার্ড */
+.user-card{background:var(--surf);border:1px solid var(--brd);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 8px 25px rgba(0,0,0,.3);transition:transform .2s;}
+.user-card:hover{transform:translateY(-2px);border-color:var(--brd2);}
+.user-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;border-bottom:1px solid var(--brd);padding-bottom:12px;}
+.user-name{font-size:16px;font-weight:800;color:var(--tx);display:flex;align-items:center;gap:8px;}
+.user-id{font-size:12px;color:var(--cyan);font-weight:600;margin-top:4px;background:rgba(0,229,255,.1);display:inline-block;padding:2px 8px;border-radius:6px;}
+.user-details{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.detail-item{font-size:12.5px;color:var(--txm);background:rgba(0,0,0,.2);padding:8px 10px;border-radius:8px;}
+.detail-item strong{color:var(--tx);display:block;margin-bottom:2px;font-size:11px;text-transform:uppercase;}
+.stat-highlight{color:var(--yel);font-weight:800;font-size:14px;}
+.user-actions{display:flex;gap:8px;}
+.btn-act{flex:1;padding:10px;border-radius:10px;border:none;font-weight:700;cursor:pointer;font-size:13px;transition:all .2s;}
+.btn-block{background:rgba(255,77,77,.15);color:var(--red);border:1px solid rgba(255,77,77,.4);}
+.btn-unblock{background:rgba(0,255,157,.15);color:var(--grn);border:1px solid rgba(0,255,157,.4);}
+.badge-online{background:var(--grn);color:#000;font-size:10px;padding:3px 8px;border-radius:10px;font-weight:800;}
+.badge-offline{background:var(--txl);color:#fff;font-size:10px;padding:3px 8px;border-radius:10px;font-weight:800;}
+
+/* ফর্ম ডিজাইন */
+.card{background:var(--surf);border:1px solid var(--brd2);border-radius:20px;padding:22px;margin-bottom:20px;box-shadow:0 10px 30px rgba(0,0,0,.4);}
+.card h2{font-size:18px;margin-bottom:20px;color:var(--cyan);display:flex;align-items:center;gap:8px;}
+label{display:block;font-size:12px;font-weight:700;color:var(--txm);margin-bottom:6px;text-transform:uppercase;}
+input,select,textarea{width:100%;background:var(--bg2);border:1px solid var(--brd);color:var(--tx);padding:14px;border-radius:12px;font-size:14px;margin-bottom:16px;font-family:inherit;transition:all .2s;}
+input:focus,select:focus,textarea:focus{border-color:var(--cyan);outline:none;box-shadow:0 0 15px rgba(0,229,255,.2);}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.file-up{position:relative;border:2px dashed var(--brd2);border-radius:14px;padding:24px;text-align:center;cursor:pointer;margin-bottom:16px;background:rgba(0,0,0,.2);transition:all .3s;}
+.file-up:hover{border-color:var(--cyan);background:rgba(0,229,255,.05);}
+.file-up input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;margin:0;}
+#imgPrev{width:100%;height:160px;object-fit:cover;border-radius:12px;display:none;margin-bottom:16px;border:1px solid var(--brd2);}
+.btn-submit{width:100%;padding:16px;border-radius:14px;border:none;font-weight:800;font-size:16px;cursor:pointer;background:linear-gradient(135deg,var(--cyan),var(--pur));color:#000;box-shadow:0 8px 25px rgba(0,229,255,.3);transition:transform .2s;}
+.btn-submit:active{transform:scale(.98);}
+
+/* ভিডিও লিস্ট */
+.v-list-item{display:flex;gap:12px;padding:14px;background:var(--surf);border:1px solid var(--brd);border-radius:16px;margin-bottom:12px;align-items:center;}
+.v-list-item img{width:90px;height:55px;border-radius:10px;object-fit:cover;box-shadow:0 4px 10px rgba(0,0,0,.4);}
+.v-info{flex:1;min-width:0;}
+.v-title{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px;}
+.v-meta{font-size:11.5px;color:var(--txm);display:flex;gap:6px;flex-wrap:wrap;}
+.v-meta span{background:rgba(255,255,255,.08);padding:3px 8px;border-radius:6px;font-weight:600;}
+.btn-del{width:40px;height:40px;border-radius:12px;background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.3);color:var(--red);cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:all .2s;}
+.btn-del:hover{background:rgba(255,77,77,.2);}
+
+/* টোস্ট */
+.toasts{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:999;display:flex;flex-direction:column;gap:10px;width:calc(100% - 28px);max-width:400px;pointer-events:none;}
+.toast{background:var(--surf2);border:1px solid var(--brd2);padding:14px 18px;border-radius:14px;font-size:14px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.8);transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:auto;}
+.toast.in{transform:translateY(0);opacity:1;}
+.toast.ok{border-color:var(--grn);color:var(--grn);}
+.toast.err{border-color:var(--red);color:var(--red);}
+</style>
+</head>
+<body>
+
+<!-- হেডার -->
+<header class="header">
+  <div class="header-row">
+    <div class="logo"><img src="https://iili.io/nNjDKBt.jpg"></div>
+    <div class="brand">XPZ ADMIN</div>
+    <div class="live-badge"><div class="live-dot"></div> লাইভ</div>
+  </div>
+</header>
+
+<!-- স্টিকি ট্যাব (স্ক্রল করলেও উপরে আটকে থাকবে) -->
+<div class="tabs-container">
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="tab-dashboard">📊 ড্যাশবোর্ড</button>
+    <button class="tab-btn" data-tab="tab-add">➕ ভিডিও যোগ</button>
+    <button class="tab-btn" data-tab="tab-videos">🎬 ভিডিও লিস্ট</button>
+  </div>
+</div>
+
+<div class="container">
+  
+  <!-- === ট্যাব ১: ড্যাশবোর্ড (ইউজার ও স্ট্যাটস) === -->
+  <div id="tab-dashboard" class="tab-content active">
+    
+    <!-- স্ট্যাটস গ্রিড -->
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-val" id="totalUsers" style="color:var(--cyan)">0</div><div class="stat-lbl">মোট ইউজার</div></div>
+      <div class="stat-card"><div class="stat-val" id="newUsersToday" style="color:var(--yel)">0</div><div class="stat-lbl">আজকের নতুন ইউজার</div></div>
+      <div class="stat-card"><div class="stat-val" id="onlineUsers" style="color:var(--grn)">0</div><div class="stat-lbl">এখন অনলাইনে</div></div>
+      <div class="stat-card"><div class="stat-val" id="totalAdsWatched" style="color:var(--pur)">0</div><div class="stat-lbl">মোট অ্যাড দেখা</div></div>
+    </div>
+
+    <!-- ক্যাটাগরি চার্ট -->
+    <div class="cat-stats-card">
+      <h3>📈 কোন ক্যাটাগরির অ্যাড কতবার দেখা হয়েছে</h3>
+      <div id="categoryStats"><div style="color:var(--txm);text-align:center;font-size:13px;">লোড হচ্ছে...</div></div>
+    </div>
+
+    <!-- ইউজার লিস্ট -->
+    <h3 style="margin-bottom:14px;color:var(--cyan);font-size:16px;">👥 ইউজার ডাটা</h3>
+    <div id="usersList"><div style="text-align:center;color:var(--txm);padding:30px;">লোড হচ্ছে...</div></div>
+  </div>
+
+  <!-- === ট্যাব ২: ভিডিও যোগ === -->
+  <div id="tab-add" class="tab-content">
+    <div class="card">
+      <h2>নতুন ভিডিও আপলোড</h2>
+      
+      <label>থাম্বনেইল ছবি (গ্যালারি থেকে) *</label>
+      <div class="file-up">
+        <input type="file" id="vThumbFile" accept="image/*" />
+        <div style="font-size:28px;margin-bottom:8px;">🖼️</div>
+        <div style="font-size:13px;color:var(--txm);font-weight:700;">ছবি সিলেক্ট করতে ক্লিক করুন</div>
+      </div>
+      <img id="imgPrev" />
+
+      <label>ভিডিও লিংক (MP4) *</label>
+      <input id="vVideo" type="url" placeholder="https://..." />
+
+      <label>ভিডিও টাইটেল (না দিলে ডিফল্ট হবে)</label>
+      <input id="vTitle" type="text" placeholder="যেমন: বিগ বাক বানি" />
+      
+      <label>ডেসক্রিপশন (ঐচ্ছিক)</label>
+      <textarea id="vDesc" rows="2" placeholder="সংক্ষিপ্ত বর্ণনা..."></textarea>
+
+      <div class="row">
+        <div>
+          <label>ক্যাটাগরি (ঐচ্ছিক)</label>
+          <select id="vCategory">
+            <option>ভাইরাল</option><option>বাচ্চাদের</option><option>টিকটক</option>
+            <option>হিজাবি</option><option>স্কুল</option><option>ফানি</option>
+            <option>মিউজিক</option><option>স্পোর্টস</option><option>ট্রাভেল</option>
+          </select>
+        </div>
+        <div>
+          <label>ডিউরেশন (ঐচ্ছিক)</label>
+          <input id="vDur" type="text" value="0:00" />
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>আনলকে বিজ্ঞাপন</label>
+          <input id="vAds" type="number" min="1" value="3" />
+        </div>
+        <div>
+          <label>ফেক ভিউ (ঐচ্ছিক)</label>
+          <input id="vViews" type="number" min="0" value="0" />
+        </div>
+      </div>
+
+      <button id="addBtn" class="btn-submit">✓ ভিডিও যোগ করুন</button>
+    </div>
+  </div>
+
+  <!-- === ট্যাব ৩: ভিডিও লিস্ট === -->
+  <div id="tab-videos" class="tab-content">
+    <h3 style="margin-bottom:14px;color:var(--cyan);font-size:16px;">🎬 সব ভিডিও</h3>
+    <div id="videosList"><div style="text-align:center;color:var(--txm);padding:30px;">লোড হচ্ছে...</div></div>
+  </div>
+
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+import { getDatabase, ref, onValue, push, remove, update } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js';
+
+const FIREBASE_URL = 'https://xpz-video-default-rtdb.asia-southeast1.firebasedatabase.app';
+const app = initializeApp({ databaseURL: FIREBASE_URL });
+const db = getDatabase(app);
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ট্যাব কন্ট্রোল */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    $(btn.dataset.tab).classList.add('active');
+  };
+});
+
+/* ==========================================
+   ১. ইউজার স্ট্যাটস ও ট্র্যাকিং
+   ========================================== */
+const usersRef = ref(db, 'users');
+onValue(usersRef, (snapshot) => {
+  const data = snapshot.val() || {};
+  const allUsers = Object.entries(data).map(([id, u]) => ({ id, ...u })).sort((a, b) => (b.lastActive || 0) - (a.lastActive || 0));
+  const startOfDay = new Date(); startOfDay.setHours(0,0,0,0); const startTime = startOfDay.getTime();
+
+  // ক্যালকুলেশন
+  const total = allUsers.length;
+  const online = allUsers.filter(u => u.isOnline).length;
+  const newToday = allUsers.filter(u => (u.createdAt || u.lastActive) >= startTime).length;
+  const totalAds = allUsers.reduce((sum, u) => sum + (u.adsWatched || 0), 0);
+
+  // ড্যাশবোর্ডে আপডেট
+  $('totalUsers').textContent = total; 
+  $('onlineUsers').textContent = online; 
+  $('newUsersToday').textContent = newToday; 
+  $('totalAdsWatched').textContent = totalAds;
+  
+  // ইউজার লিস্ট রেন্ডার
+  const list = $('usersList');
+  if (!allUsers.length) { 
+    list.innerHTML = '<div style="text-align:center;color:var(--txm);padding:30px;background:var(--surf);border-radius:16px;">এখনো কোনো ইউজার ঢুকেনি।</div>'; 
+    return; 
+  }
+
+  list.innerHTML = allUsers.map(u => {
+    const date = new Date(u.lastActive || Date.now()).toLocaleString('bn-BD');
+    const statusBadge = u.isOnline ? '<span class="badge-online">🟢 অনলাইন</span>' : '<span class="badge-offline">⚪ অফলাইন</span>';
+    const blockBtn = u.isBlocked 
+      ? `<button class="btn-act btn-unblock" onclick="toggleBlock('${u.id}', false)">✓ আনব্লক করুন</button>` 
+      : `<button class="btn-act btn-block" onclick="toggleBlock('${u.id}', true)">🚫 ব্লক করুন</button>`;
+    
+    return `
+      <div class="user-card">
+        <div class="user-head">
+          <div>
+            <div class="user-name">${esc(u.name)} ${statusBadge}</div>
+            <div class="user-id">ID: ${esc(u.id)}</div>
+          </div>
+        </div>
+        <div class="user-details">
+          <div class="detail-item"><strong>অ্যাড দেখেছে</strong> <span class="stat-highlight">${u.adsWatched || 0} টি</span></div>
+          <div class="detail-item"><strong>ভিডিও দেখেছে</strong> <span class="stat-highlight">${u.videosWatched || 0} টি</span></div>
+          <div class="detail-item"><strong>IP অ্যাড্রেস</strong> ${esc(u.ip)}</div>
+          <div class="detail-item"><strong>লোকেশন</strong> ${esc(u.location)}</div>
+          <div class="detail-item" style="grid-column: 1 / -1;"><strong>শেষ একটিভ</strong> ${date}</div>
+        </div>
+        <div class="user-actions">${blockBtn}</div>
+      </div>`;
+  }).join('');
+});
+
+window.toggleBlock = (id, block) => { 
+  update(ref(db, `users/${id}`), { isBlocked: block }).then(() => {
+    toast(block ? '🚫 ইউজার ব্লক করা হয়েছে' : '✓ ইউজার আনব্লক করা হয়েছে', block ? 'err' : 'ok');
+  }); 
+};
+
+/* ==========================================
+   ২. ক্যাটাগরি লগ (কোন ক্যাটাগরির কত অ্যাড)
+   ========================================== */
+onValue(ref(db, 'ad_logs'), (snapshot) => {
+  const data = snapshot.val() || {}; 
+  const logs = Object.values(data); 
+  const catCounts = {};
+  
+  logs.forEach(log => { 
+    if(log.category) catCounts[log.category] = (catCounts[log.category] || 0) + 1; 
+  });
+  
+  const catContainer = $('categoryStats'); 
+  const sortedCats = Object.entries(catCounts).sort((a,b) => b[1] - a[1]);
+  
+  if (!sortedCats.length) { 
+    catContainer.innerHTML = '<div style="color:var(--txm);text-align:center;font-size:13px;">এখনো কোনো অ্যাড দেখা হয়নি।</div>'; 
+    return; 
+  }
+  
+  const maxCount = sortedCats[0][1];
+  catContainer.innerHTML = sortedCats.map(([cat, count]) => `
+    <div class="cat-row">
+      <div class="cat-name">${esc(cat)}</div>
+      <div class="cat-bar-wrap"><div class="cat-bar" style="width:${(count/maxCount)*100}%"></div></div>
+      <div class="cat-count">${count} টি</div>
+    </div>`).join('');
+});
+
+/* ==========================================
+   ৩. ভিডিও ম্যানেজমেন্ট
+   ========================================== */
+const videosRef = ref(db, 'xpz-videos-v1');
+let selectedThumbBase64 = '';
+
+onValue(videosRef, (snapshot) => {
+  const data = snapshot.val() || {}; 
+  const entries = Object.entries(data).sort((a,b) => (b[1].createdAt||0) - (a[1].createdAt||0)); 
+  const list = $('videosList');
+  
+  if (!entries.length) { 
+    list.innerHTML = '<div style="text-align:center;color:var(--txm);padding:30px;background:var(--surf);border-radius:16px;">কোনো ভিডিও নেই।</div>'; 
+    return; 
+  }
+  
+  list.innerHTML = entries.map(([id, v]) => `
+    <div class="v-list-item">
+      <img src="${v.thumbnail}" />
+      <div class="v-info">
+        <div class="v-title">${esc(v.title)}</div>
+        <div class="v-meta">
+          <span>${esc(v.category)}</span>
+          <span>${v.adsRequired} Ads</span>
+          <span>${v.views || 0} Views</span>
+        </div>
+      </div>
+      <button class="btn-del" onclick="deleteVideo('${id}')">🗑</button>
+    </div>
+  `).join('');
+});
+
+window.deleteVideo = (id) => { 
+  if (confirm('ভিডিওটি ডিলিট করবেন?')) {
+    remove(ref(db, `xpz-videos-v1/${id}`)).then(() => toast('✓ ডিলিট হয়েছে', 'ok')); 
+  }
+};
+
+/* ছবি সিলেক্ট ও রিসাইজ */
+$('vThumbFile').onchange = (e) => {
+  const file = e.target.files[0]; 
+  if (!file) return;
+  const reader = new FileReader();
+  
+  reader.onload = (ev) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas'); 
+      const scale = 600 / img.width; 
+      canvas.width = 600; 
+      canvas.height = img.height * scale;
+      
+      const ctx = canvas.getContext('2d'); 
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      selectedThumbBase64 = canvas.toDataURL('image/jpeg', 0.7);
+      
+      const prev = $('imgPrev'); 
+      prev.src = selectedThumbBase64; 
+      prev.style.display = 'block'; 
+      toast('ছবি রেডি!', 'ok');
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+/* ভিডিও যোগ করা */
+$('addBtn').onclick = async () => {
+  const videoUrl = $('vVideo').value.trim();
+  if (!videoUrl) return toast('ভিডিও লিংক দিতে হবে!', 'err');
+  if (!selectedThumbBase64) return toast('গ্যালারি থেকে ছবি দিন!', 'err');
+
+  // অটো-ফিল ডিফল্ট ভ্যালু
+  const title = $('vTitle').value.trim() || 'XPZ Premium Video';
+  const desc = $('vDesc').value.trim() || '';
+  const category = $('vCategory').value || 'ভাইরাল';
+  const dur = $('vDur').value.trim() || '0:00';
+  const ads = parseInt($('vAds').value) || 3;
+  const views = parseInt($('vViews').value) || 0;
+
+  const btn = $('addBtn'); 
+  btn.disabled = true; 
+  btn.textContent = 'যোগ হচ্ছে...';
+  
+  try {
+    await push(videosRef, { title, thumbnail: selectedThumbBase64, videoUrl, desc, category, dur, adsRequired: ads, views, createdAt: Date.now() });
+    toast('✓ ভিডিও সফলভাবে যোগ হয়েছে!', 'ok');
+    $('vTitle').value = ''; $('vVideo').value = ''; $('vDesc').value = ''; $('vViews').value = '0';
+    $('vThumbFile').value = ''; $('imgPrev').style.display = 'none'; selectedThumbBase64 = '';
+  } catch (err) { 
+    toast('ব্যর্থ: ' + err.message, 'err'); 
+  }
+  
+  btn.disabled = false; 
+  btn.textContent = '✓ ভিডিও যোগ করুন';
+};
+
+function toast(msg, type='ok', ms=3000) { 
+  const stack = $('toasts'); 
+  const el = document.createElement('div'); 
+  el.className = 'toast ' + type; 
+  el.textContent = msg; 
+  stack.appendChild(el); 
+  requestAnimationFrame(() => el.classList.add('in')); 
+  setTimeout(() => { el.classList.remove('in'); setTimeout(() => el.remove(), 300); }, ms); 
+}
+</script>
+</body>
+</html>
